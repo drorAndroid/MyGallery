@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyGallery</string>
+    <string name="pixabay_api_key" translatable="false">1631539-db8210cabd2636c6df59812df</string>
+</resources>
