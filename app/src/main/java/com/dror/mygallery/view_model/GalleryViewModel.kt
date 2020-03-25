@@ -31,4 +31,8 @@ class GalleryViewModel(app: Application): AndroidViewModel(app) {
     fun getLoading(): MutableLiveData<Boolean> {
         return galleryRepository.getLoading()
     }
+
+    fun getError(): MutableLiveData<String?> {
+        return galleryRepository.getError()
+    }
 }

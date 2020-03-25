@@ -1,7 +1,10 @@
 package com.dror.mygallery.repository
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.dror.mygallery.R
 import com.dror.mygallery.model.Photo
@@ -18,6 +21,7 @@ class GalleryRepository() {
     private var currPage: Int? = null
     val mPhotos: MutableLiveData<List<Photo>?> = MutableLiveData()
     val mLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val mError: MutableLiveData<String?> = MutableLiveData()
 
     val pageStartIndex = 1
 
@@ -28,6 +32,10 @@ class GalleryRepository() {
 
     fun getLoading(): MutableLiveData<Boolean> {
         return mLoading
+    }
+
+    fun getError(): MutableLiveData<String?> {
+        return mError
     }
 
     fun getPhotos(
@@ -42,27 +50,36 @@ class GalleryRepository() {
             apiRequest?.getPhotos(context.getString(R.string.pixabay_api_key), query, "photo", "popular", nextPage, perPage)
                 ?.enqueue(object : Callback<GalleryResponse?> {
                     override fun onFailure(call: Call<GalleryResponse?>, t: Throwable) {
-                        mPhotos.value = null
                         mLoading.value = false
+                        mError.value = "no internet connection"
                     }
 
                     override fun onResponse(
                         call: Call<GalleryResponse?>,
                         response: Response<GalleryResponse?>
                     ) {
-                        Log.d("gallery_response", "onResponse response:: $response")
-                        if (response.body() != null) {
-                            val body = response.body()
-                            body?.let {
-                                body.photos?.let {
-                                    val photos: List<Photo> = it
-                                    var currList = mPhotos.value?.toMutableList()
-                                    if (currList == null) {
-                                        currList = mutableListOf()
+                        if (response.isSuccessful) {
+                            if (response.body() != null) {
+                                val body = response.body()
+                                body?.let {
+                                    body.photos?.let {
+                                        val photos: List<Photo> = it
+                                        var currList = mPhotos.value?.toMutableList()
+                                        if (currList == null) {
+                                            currList = mutableListOf()
+                                        }
+                                        currList.addAll(photos)
+                                        mPhotos.value = currList
                                     }
-                                    currList.addAll(photos)
-                                    mPhotos.value = currList
                                 }
+                            }
+                            mError.value = null
+                        } else {
+                            // parse the response body …
+                            when (response.code()) {
+                                404 -> mError.value = "not found"
+                                500 -> mError.value = "server error"
+                                else -> mError.value = "unknown error"
                             }
                         }
 

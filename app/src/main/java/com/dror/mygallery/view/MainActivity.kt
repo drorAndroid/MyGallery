@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -80,6 +81,13 @@ class MainActivity : AppCompatActivity() {
             }
             else {
                 progressBar.visibility = View.GONE
+            }
+        })
+        viewModel.getError().observe(this, Observer { error ->
+            error?.let {
+                if(error.isNotEmpty()) {
+                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+                }
             }
         })
     }
