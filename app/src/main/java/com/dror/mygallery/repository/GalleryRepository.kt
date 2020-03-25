@@ -1,10 +1,6 @@
 package com.dror.mygallery.repository
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.dror.mygallery.R
 import com.dror.mygallery.model.Photo

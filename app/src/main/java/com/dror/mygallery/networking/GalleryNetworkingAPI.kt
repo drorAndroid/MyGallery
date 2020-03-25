@@ -1,6 +1,5 @@
 package com.dror.mygallery.networking
 
-import com.dror.mygallery.model.Photo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
