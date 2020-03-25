@@ -60,7 +60,7 @@ class GalleryAdapter(c: Activity, photos: List<Photo>, private val imageWidth: I
         val imageURLInPreferredWidth = photo.webformatURL?.replace(defaultImageWidthString, preferredImageWidthString)
         Glide.with(mContext)
             .load(imageURLInPreferredWidth)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(holder.mGalleryImageView!!)
 
         val key = photo.id.toString()
