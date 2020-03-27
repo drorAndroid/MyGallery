@@ -61,7 +61,7 @@ class GalleryRepository() {
                                     body.photos?.let {
                                         val photos: List<Photo> = it
                                         var currList = mPhotos.value?.toMutableList()
-                                        if (currList == null) {
+                                        if (currList == null || currPage == 1) {
                                             currList = mutableListOf()
                                         }
                                         currList.addAll(photos)
@@ -107,4 +107,7 @@ class GalleryRepository() {
         return nextPage
     }
 
+    fun getCurrentQuery(): String {
+        return currQuery
+    }
 }

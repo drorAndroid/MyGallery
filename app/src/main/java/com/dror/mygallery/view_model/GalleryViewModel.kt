@@ -35,4 +35,8 @@ class GalleryViewModel(app: Application): AndroidViewModel(app) {
     fun getError(): MutableLiveData<String?> {
         return galleryRepository.getError()
     }
+
+    fun getCurrentQuery(): String {
+        return galleryRepository.getCurrentQuery()
+    }
 }

@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 val lastItem = firstVisibleItem + visibleItemCount
                 if ((lastItem >= totalItemCount - moreItemsThreshold) && totalItemCount != 0) {
                     // here you have reached end of list, load more data
-                    viewModel.searchPhoto("")
+                    viewModel.searchPhoto(viewModel.getCurrentQuery())
                 }
             }
 
