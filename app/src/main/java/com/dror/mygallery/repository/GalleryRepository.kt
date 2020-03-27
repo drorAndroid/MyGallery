@@ -14,12 +14,11 @@ import retrofit2.Response
 class GalleryRepository() {
     private var apiRequest: GalleryNetworkingAPI? = null
     private var currQuery = ""
-    private var currPage: Int? = null
+    private val pageStartIndex = 1
+    private var currPage: Int = pageStartIndex
     val mPhotos: MutableLiveData<List<Photo>?> = MutableLiveData()
     val mLoading: MutableLiveData<Boolean> = MutableLiveData()
     val mError: MutableLiveData<String?> = MutableLiveData()
-
-    val pageStartIndex = 1
 
     init {
         mLoading.value = false
@@ -40,7 +39,7 @@ class GalleryRepository() {
         perPage: Int
     ): MutableLiveData<List<Photo>?>? {
         val nextPage = getNextPage(query, perPage)
-        if(currPage == null || currPage!! != nextPage) {
+        if(currPage == 1 || currPage != nextPage) {
             mLoading.value = true
             currPage = nextPage
             apiRequest?.getPhotos(context.getString(R.string.pixabay_api_key), query, "photo", "popular", nextPage, perPage)
@@ -61,10 +60,10 @@ class GalleryRepository() {
                                     body.photos?.let {
                                         val photos: List<Photo> = it
                                         var currList = mPhotos.value?.toMutableList()
-                                        if (currList == null || currPage == 1) {
+                                        if (currPage == 1) {
                                             currList = mutableListOf()
                                         }
-                                        currList.addAll(photos)
+                                        currList?.addAll(photos)
                                         mPhotos.value = currList
                                     }
                                 }
@@ -100,7 +99,7 @@ class GalleryRepository() {
         else {
             //the query has changed, invalidate current list andPage
             mPhotos.value = null
-            currPage = null
+            currPage = 1
         }
         currQuery = query
 
